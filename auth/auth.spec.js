@@ -67,8 +67,8 @@ describe('server', () => {
     //TESTING FOR JOKES
     describe('GET /api/jokes', () => {
         let token;
-        beforeEach(() => {
-            request(server)
+        beforeEach(async () => {
+            await request(server)
                 .post('/api/auth/login')
                 .send({
                     username: 'testingboi',
@@ -76,10 +76,12 @@ describe('server', () => {
                 })
                 .then(res => {
                     token = res.body.token;
+                    
                 });
+                
         });
         //no token, should fail
-        it('It should require authorization', () => {
+        it('It should require authorization', async () => {
             return request(server)
               .get('/api/jokes')
               .then(res => {
@@ -87,7 +89,7 @@ describe('server', () => {
               });
           });
         //token given, should pass
-        test('It responds with JSON', () => {
+        test('It responds with JSON', async () => {
             return request(server)
               .get('/api/jokes')
               .set('Authorization', `${token}`)

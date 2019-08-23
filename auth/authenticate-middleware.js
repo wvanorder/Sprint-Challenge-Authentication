@@ -22,6 +22,6 @@ module.exports = (req, res, next) => {
       }
     });
   } else {
-    res.status(404).json({ error: 'you gotta send that token to me! double check that it is being sent in the header of your axiosWithAuth'})
+    res.status(401).json({ error: 'you gotta send that token to me, but the is not one! double check that it is being sent in the header of your axiosWithAuth'})
   }
 };
