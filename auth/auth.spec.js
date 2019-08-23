@@ -3,6 +3,8 @@ const request = require('supertest');
 const db = require('../database/dbConfig');
 const server = require('../api/server');
 
+
+
 describe('server', () => {
     //TESTS for registering
     describe('POST /api/auth/register', () => {
@@ -64,12 +66,35 @@ describe('server', () => {
 
     //TESTING FOR JOKES
     describe('GET /api/jokes', () => {
-        it('gives us an array', () => {
+        let token;
+        beforeEach(() => {
+            request(server)
+                .post('/api/auth/login')
+                .send({
+                    username: 'testingboi',
+                    password: 'passyboi',
+                })
+                .then(res => {
+                    token = res.body.token;
+                });
+        });
+        //no token, should fail
+        it('It should require authorization', () => {
             return request(server)
               .get('/api/jokes')
               .then(res => {
-                expect(Array.isArray(res.body)).toBe(true)
-              })
-        })
+                expect(res.status).toBe(401);
+              });
+          });
+        //token given, should pass
+        test('It responds with JSON', () => {
+            return request(server)
+              .get('/api/jokes')
+              .set('Authorization', `${token}`)
+              .then(res => {
+                expect(res.statusCode).toBe(200);
+                expect(res.type).toBe('application/json');
+              });
+        });
     })
 });
