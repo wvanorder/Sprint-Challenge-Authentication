@@ -77,8 +77,7 @@ describe('server', () => {
                 .then(res => {
                     token = res.body.token;
                     
-                });
-                
+                });        
         });
         //no token, should fail
         it('It should require authorization', async () => {
